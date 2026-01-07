@@ -1,0 +1,22 @@
+apiVersion: pulumi.com/v1
+kind: Stack
+metadata:
+  name: go-rollout-stack
+  namespace: default
+spec:
+  stack: dev
+  projectRepo: https://github.com/pulumi/examples
+  repoDir: kubernetes-go-configmap-rollout
+  branch: refs/heads/master
+
+  backend: file:///pulumi/state
+  envVars:
+    PULUMI_CONFIG_PASSPHRASE: { value: "go-demo-password" }
+    PULUMI_CONFIG: { value: '{"kubernetes-go-configmap-rollout:isMinikube": "true"}' }
+
+  volumes:
+    - name: state-storage
+      persistentVolumeClaim: { claimName: pulumi-state-pvc }
+  volumeMounts:
+    - name: state-storage
+      mountPath: /pulumi/state
